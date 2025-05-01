@@ -159,4 +159,8 @@ jobs:
               --create-namespace
             else
              echo "Error: Helm chart not found at helm/boardgame-chart. Skipping Helm installation."
+<<<<<<< HEAD
             fi
+=======
+            fi
+>>>>>>> 97aadd2 (added helm chart)
