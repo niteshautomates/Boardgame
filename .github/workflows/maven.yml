@@ -5,6 +5,11 @@ name: Java CI with Maven
 on:
   push:
     branches: [ "develop" ]
+    paths-ignore:
+      - "helm/**"
+      - "README.md"
+      - "Jenkinsfile"
+      - "deployment-service.yaml"
 
 
 jobs:
