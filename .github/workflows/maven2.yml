@@ -125,7 +125,7 @@ jobs:
               file: ./Dockerfile
               platforms: linux/AMD64
               push: true
-              tags: ${{ vars.DOCKERHUB_USERNAME }}/boardgame:${{github.run_id}}
+              tags: ${{ secrets.DOCKERHUB_USERNAME }}/boardgame:${{github.run_id}}
 
   # run_docker_container:
   #   name: Run Docker Container
