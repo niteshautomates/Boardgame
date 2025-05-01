@@ -150,4 +150,13 @@ jobs:
           version: '3.8.0'
       - name: Install Helm Chart
         run: |
-            helm upgrade --install boardgame /helm/boardgame-chart --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/boardgame --set image.tag=${{ github.run_id }} --namespace boardgame --create-namespace
+            if [ -d "helm/boardgame-chart" ]; then
+            echo "Helm chart found at helm/boardgame-chart"
+            helm upgrade --install boardgame helm/boardgame-chart \
+              --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/boardgame \
+              --set image.tag=${{ github.run_id }} \
+              --namespace boardgame \
+              --create-namespace
+          else
+            echo "Error: Helm chart not found at helm/boardgame-chart. Skipping Helm installation."
+          fi
