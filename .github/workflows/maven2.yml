@@ -90,7 +90,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ needs.checkout_and_setup.outputs.docker_image_tag }} .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/boardgame:${{ github.run_id }} .
 
   trivy_scan_image:
     name: Trivy Image Scan
@@ -100,7 +100,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: ${{ needs.checkout_and_setup.outputs.docker_image_tag }}
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/boardgame:${{ github.run_id }}
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
@@ -118,9 +118,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Push Docker Image
-        run: |
-          docker push ${{ needs.checkout_and_setup.outputs.docker_image_tag }}
+      - name: Build and Push action
+        uses: docker/build-push-action@v6
+        with:
+              context: .
+              file: ./Dockerfile
+              platforms: linux/AMD64
+              push: true
+              tags: ${{ vars.DOCKERHUB_USERNAME }}/boardgame:${{github.run_id}}
 
   run_docker_container:
     name: Run Docker Container
@@ -129,5 +134,5 @@ jobs:
     steps:
       - name: Run Docker Container
         run: |
-          docker run -d --name my-app -p 8080:8080 ${{ needs.checkout_and_setup.outputs.docker_image_tag }}
+          docker run -d --name my-app -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/boardgame:${{ github.run_id }}
           echo "Docker container 'Boardgame App' is running."
