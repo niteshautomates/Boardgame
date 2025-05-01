@@ -127,12 +127,26 @@ jobs:
               push: true
               tags: ${{ vars.DOCKERHUB_USERNAME }}/boardgame:${{github.run_id}}
 
-  run_docker_container:
-    name: Run Docker Container
+  # run_docker_container:
+  #   name: Run Docker Container
+  #   needs: push_docker_image
+  #   runs-on: self-hosted
+  #   steps:
+  #     - name: Run Docker Container
+  #       run: |
+  #         docker run -d --name my-app -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/boardgame:${{ github.run_id }}
+  #         echo "Docker container 'Boardgame App' is running."
+  install-helm-chart:
+    name: Install Helm Chart
     needs: push_docker_image
     runs-on: self-hosted
     steps:
-      - name: Run Docker Container
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3.8.0'
+      - name: Install Helm Chart
         run: |
-          docker run -d --name my-app -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/boardgame:${{ github.run_id }}
-          echo "Docker container 'Boardgame App' is running."
+            helm upgrade --install boardgame /helm/boardgame-chart --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/boardgame --set image.tag=${{ github.run_id }} --namespace boardgame --create-namespace
