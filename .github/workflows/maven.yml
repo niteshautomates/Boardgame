@@ -28,14 +28,14 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Install Trivy
-      uses: aquasecurity/setup-trivy@0.28.0
+    - name: Run Trivy scanner without cache
+      uses: aquasecurity/trivy-action@0.28.0
       with:
-        version: "0.41.0" # Or the desired version
-
-    - name: Trivy FS scan
-      run: |
-        trivy fs --format table -o fs.html .
+        scan-type: 'fs'
+        scan-ref: '.'
+        cache: 'false'
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'  
 
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
@@ -60,11 +60,17 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build -t nitesh2611/boardgame:latest .
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/boardgame:${{github.run_id}} .
 
-    - name: Trivy Image Scan
-      run: |
-        trivy image --format table -o trivy-image-report.html adijaiswal/board:latest
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@0.28.0
+      with:
+          image-ref: 'docker.io/${{ secrets.DOCKERHUB_USERNAME }}/boardgame:${{github.run_id}}'
+          format: 'table'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH' 
     
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -74,7 +80,7 @@ jobs:
 
     - name: Push Docker Image
       run: |
-          docker push nitesh2611/boardgame:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/boardgame:${{github.run_id}}
 
 
 
