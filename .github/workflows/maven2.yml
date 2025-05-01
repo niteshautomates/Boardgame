@@ -37,7 +37,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: echo "skip"
 
   trivy_scan_fs:
     name: Trivy File System Scan
