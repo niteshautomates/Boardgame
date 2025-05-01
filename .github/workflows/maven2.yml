@@ -157,6 +157,6 @@ jobs:
               --set image.tag=${{ github.run_id }} \
               --namespace boardgame \
               --create-namespace
-          else
-            echo "Error: Helm chart not found at helm/boardgame-chart. Skipping Helm installation."
-          fi
+            else
+             echo "Error: Helm chart not found at helm/boardgame-chart. Skipping Helm installation."
+            fi
