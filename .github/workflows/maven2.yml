@@ -8,6 +8,7 @@ on:
       - "README.md"
       - "Jenkinsfile"
       - "deployment-service.yaml"
+      - "gitlab-ci.yml"
 
 jobs:
   checkout_and_setup:
