@@ -55,7 +55,7 @@ pipeline {
         }
         stage('Deploy to container') {
             steps {
-                sh 'docker run -d --name hotstar -p 8282:8080 nitesh2611/boardgame:latest'
+                sh 'docker run -d --name boardgame -p 8282:8080 nitesh2611/boardgame:latest'
             }
         }
     }
