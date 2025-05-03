@@ -12,7 +12,6 @@ WORKDIR /app
 
 COPY --from=base /app/target /app/target
 
-
 EXPOSE 8080
 
 CMD ["java", "-jar","target/boardgame-0.0.7.jar"]
