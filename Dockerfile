@@ -15,4 +15,4 @@ COPY --from=base /app/target /app/target
 
 EXPOSE 8080
 
-CMD ["java", "-jar","target/boardgame-0.0.25.jar"]"java", "-jar","target/boardgame-0.0.7.jar"]
+CMD ["java", "-jar","target/boardgame-0.0.25.jar"]
